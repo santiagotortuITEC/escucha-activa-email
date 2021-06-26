@@ -1,5 +1,5 @@
-project=escucha-activa
-app_name=email
+project=experienciaescuchaactiva
+app_name=email-service
 app_version=1.0
 
 build:
