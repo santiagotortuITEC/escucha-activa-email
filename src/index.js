@@ -37,8 +37,8 @@ app.post('/send-email', (req, res) => {
         post: '465', //465 para SSL y 587 para TLS.
         secure: false,
         auth: {
-            user: 'technologyblog0@gmail.com',
-            pass: 'vwgzlntpbsputvwo'
+            user: 'escuchaactivaseminario@gmail.com',
+            pass: 'pptmtjpmmqiwptug'
         }
     })
     let mailOptions = {
