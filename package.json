@@ -13,6 +13,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "mysql": "^2.18.1",
+    "cors": "latest",
     "nodemailer": "^6.6.1"
   },
   "devDependencies": {

@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+
+  email-service-nginx:
+    image: nginx:1.19
+    container_name: email-service-nginx
+    restart: always
+    ports:
+      - 3001:3001
+    volumes:
+      - ./nginx/resolv.conf:/etc/resolv.conf
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/certs/ssl-bundle.crt:/etc/nginx/certs/ssl-bundle.crt
+      - ./nginx/certs/_.experienciaescuchaactiva.com.crt:/etc/nginx/certs/_.experienciaescuchaactiva.com.crt
+      - ./nginx/certs/_.experienciaescuchaactiva.com.key:/etc/nginx/certs/_.experienciaescuchaactiva.com.key
+      - ./nginx/log/error.log:/var/log/nginx/error.log
+
+  email-service:
+    image: experienciaescuchaactiva/email-service:latest
+    container_name: email-service
+    restart: always
+    ports:
+      - 3001

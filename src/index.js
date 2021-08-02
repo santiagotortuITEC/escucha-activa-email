@@ -1,6 +1,7 @@
 const express = require('express');
+var cors = require('cors');
 const app = express();
-//const conn  = require('./database');  
+//const conn  = require('./database');
 const nodemailer = require('nodemailer');
 // Settings
 app.set('port', process.env.PORT || 3001);
@@ -14,19 +15,24 @@ app.listen(app.get('port'), () => {
 });
 // Configurar cabeceras y cors
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
-    next();
-});
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Content-Type", "application/json");
+	res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+	res.header("Access-Control-Allow-Headers", "*");
+//	if ('OPTIONS' == req.method) {
+//	  res.sendStatus(200);
+//	  } else {
+	next();
+//	  }
+	});
 
+app.options('/send-email', cors());
 // Routes
 app.get('/', (req, res) => res.send('EscuchaActiva - email service'))
 
 
 app.post('/send-email', (req, res) => {
-
+    console.log("send-email");
     let consulta = req.body.consulta;
     let email = req.body.email;
     let estudiante = req.body.estudiante;
@@ -35,7 +41,7 @@ app.post('/send-email', (req, res) => {
     let transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com.',
         post: '465', //465 para SSL y 587 para TLS.
-        secure: false,
+        secure: true,
         auth: {
             user: 'escuchaactivaseminario@gmail.com',
             pass: 'pptmtjpmmqiwptug'
@@ -51,60 +57,60 @@ app.post('/send-email', (req, res) => {
           <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  
-          
             <style>
-              .landing { 
+              .landing {
                 background: #022430;
                 padding: 25px
-              } 
+              }
               .title {
                 font-size: 1.3rem;
                 color: rgba(30,196,151,1);
                 margin-left: 20px;
                 margin-top: 15px
               }
-              .subtitle { 
+              .subtitle {
                 font-size: 0.8rem;
                 color: #eaeeef;
                 margin-left: 20px;
                 margin-button: 10px
-              } 
-              .consulta { 
+              }
+              .consulta {
                 font-size: 1.0rem;
                 color: #eaeeef;
                 margin-left: 20px;
                 margin-button: 20px
-              } 
+              }
             </style>
           </head>
           <body>
-          
           <!-- Start Landing Page-->
           <div class="landing pt-2">
             <div class="container-fluid pt-1 pb-5">
               <div class="row justify-content-center p-5">
                 <div class="col-12 text-center">
-                  <p class="title text-light font-weight-bold">Nueva consulta del estudiante ${estudiante} </p> 
-                  <p class="subtitle text-light font-weight-bold">Email: ${emailEstudiante} </p> 
-                  <p class="consulta text-light pb-3">Consulta: ${consulta} </p> 
+                  <p class="title text-light font-weight-bold">Nueva consulta del estudiante ${estudiante} </p>
+                  <p class="subtitle text-light font-weight-bold">Email: ${emailEstudiante} </p>
+                  <p class="consulta text-light pb-3">Consulta: ${consulta} </p>
                 </div>
               </div>
             </div>
           </div>
           <!-- End Landing Page -->
-            
           </body>
-          </html>  
+          </html>
         `
     }
+    console.log("pre-sending");
     transporter.sendMail(mailOptions, (error, info) => {
+        console.log("sending");
         if (error) {
+	    console.log("error");
             res.status(500).send(error.message);
         }
+	console.log("sending...");
 
-        res.send(JSON.stringify({ "status": 200, "error": null, "response": "Consulta enviada correctamente." }));
+//        res.send(JSON.stringify({ "status": 200, "error": null, "response": "Consulta enviada correctamente." }));
 
     });
-
+res.send(JSON.stringify({ "status": 200, "error": null, "response": "Consulta enviada correctamente." }));
 })
