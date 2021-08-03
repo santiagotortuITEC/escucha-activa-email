@@ -19,14 +19,12 @@ app.use((req, res, next) => {
 	res.header("Content-Type", "application/json");
 	res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
 	res.header("Access-Control-Allow-Headers", "*");
-//	if ('OPTIONS' == req.method) {
-//	  res.sendStatus(200);
-//	  } else {
 	next();
-//	  }
 	});
 
+//Options
 app.options('/send-email', cors());
+
 // Routes
 app.get('/', (req, res) => res.send('EscuchaActiva - email service'))
 
@@ -37,6 +35,7 @@ app.post('/send-email', (req, res) => {
     let email = req.body.email;
     let estudiante = req.body.estudiante;
     let emailEstudiante = req.body.emailEstudiante;
+    console.log("body = " + consulta + " " + email + " " + estudiante + " " + emailEstudiante)
 
     let transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com.',
@@ -44,7 +43,7 @@ app.post('/send-email', (req, res) => {
         secure: true,
         auth: {
             user: 'escuchaactivaseminario@gmail.com',
-            pass: 'pptmtjpmmqiwptug'
+            pass: 'xyapktjujiehdmkq'
         }
     })
     let mailOptions = {
@@ -102,15 +101,13 @@ app.post('/send-email', (req, res) => {
     }
     console.log("pre-sending");
     transporter.sendMail(mailOptions, (error, info) => {
-        console.log("sending");
         if (error) {
 	    console.log("error");
             res.status(500).send(error.message);
         }
 	console.log("sending...");
 
-//        res.send(JSON.stringify({ "status": 200, "error": null, "response": "Consulta enviada correctamente." }));
+        res.send(JSON.stringify({ "status": 200, "error": null, "response": "Consulta enviada correctamente." }));
 
     });
-res.send(JSON.stringify({ "status": 200, "error": null, "response": "Consulta enviada correctamente." }));
 })
